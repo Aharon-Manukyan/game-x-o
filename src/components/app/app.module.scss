@@ -1,0 +1,25 @@
+*{
+  background: black;
+  color: white;
+  text-align: center;
+}
+.myClass{
+
+}
+
+.flexGroup{
+  display: flex;
+  flex-direction: row;
+
+
+
+  .startBox{
+    width: 25%;
+  }
+  .gameBoard{
+    width:50%;
+  }
+  .scoreBox{
+    width: 25%;
+  }
+}
