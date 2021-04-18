@@ -38,6 +38,25 @@ const changePlayerValue_O = () => {
     type:"CHANGE_VALUE_O"
   }
 }
+const nextTurn = () => {
+  return{
+    type:"NEXT_TURN"
+  }
+}
+
+const gameIsTie = () => {
+  return{
+    type:"GAME_IS_TIE"
+  }
+};
+const gameIsEnd = (win) => {
+    return{
+      type:"GAME_IS_END",
+      payload:win
+    }
+}
+
+
 export {
   gameStarted,
   gameRestarted,
@@ -45,5 +64,8 @@ export {
   twoPlayersSelected,
   onePlayerSelected,
   changePlayerValue_X,
-  changePlayerValue_O
+  changePlayerValue_O,
+  nextTurn,
+  gameIsTie,
+  gameIsEnd
 };

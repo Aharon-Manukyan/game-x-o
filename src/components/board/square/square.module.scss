@@ -4,4 +4,27 @@
   border: 5px solid white;
   margin: 0 auto;
   display: inline-block;
+  position: relative;
 }
+
+.contain{
+  position: absolute;
+  top: 15px;
+  left: 63px;
+  font-size: 154px;
+}
+.noBoarder{
+  border: none!important;
+}
+.horizontalBoarder{
+  border-bottom: none!important;
+  border-top: none!important;
+}
+
+.verticalBoarder{
+  border-right: none!important;
+  border-left: none!important;
+}
+
+
+

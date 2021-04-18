@@ -1,9 +1,12 @@
 import React from 'react';
+import {connect} from "react-redux";
 import styles from './scores.module.scss';
+import * as actions from '../../redux/actionCreators';
 
 
 
-const Scores = () => {
+const Scores = (props) => {
+  const {player1,player2,tie} = props.state.scores;
   return(
     <React.Fragment>
       <div className={styles.score}>
@@ -15,9 +18,9 @@ const Scores = () => {
             <div>Computer</div>
           </div>
           <div className={styles.row2}>
-            <div>0</div>
-            <div>0</div>
-            <div>0</div>
+            <div>{player1}</div>
+            <div>{tie}</div>
+            <div>{player2}</div>
           </div>
         </div>
       </div>
@@ -27,4 +30,11 @@ const Scores = () => {
     </React.Fragment>
   )};
 
-export default Scores;
+const mapStateToProps = (state) => {
+  return {
+    state: state
+  }
+};
+
+
+export default connect(mapStateToProps,actions)(Scores);
