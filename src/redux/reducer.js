@@ -75,7 +75,7 @@ const reducer = (state = initialState, action) => {
         array: initialState.array
       }
     case "GAME_IS_END":
-      if(action.payload === "X"){
+      if(action.payload === state.player_value){
         return {
           ...state,
           scores:{...state.scores,player1: state.scores.player1 + 1},
