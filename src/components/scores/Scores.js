@@ -15,7 +15,7 @@ const Scores = (props) => {
           <div className={styles.row1}>
             <div> Player {props.state.player_value}</div>
             <div>Tie</div>
-            <div>{props.state.two_players ?`Player 2   O`:`Computer ${props.state.computer_value}`} </div>
+            <div>{props.state.two_players ?`Player O`:`Computer ${props.state.computer_value}`} </div>
           </div>
           <div className={styles.row2}>
             <div>{player1}</div>

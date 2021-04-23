@@ -13,7 +13,8 @@ const gameRestarted = () => {
 const stepTaken = (id,letter) => {
   return{
     type:"STEP_TAKEN",
-    payload:{id,letter}
+    id,
+    letter
   }
 }
 

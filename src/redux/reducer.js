@@ -5,7 +5,7 @@ const initialState = {
   player_default_value:true,
   player_value:"X",
   computer_value:"O",
-  steps:0,
+  steps:null,
   lastStep:null,
   scores:{
     player1:0,
@@ -19,7 +19,8 @@ const reducer = (state = initialState, action) => {
     case "GAME_STARTED":
       return {
         ...state,
-        start:true
+        start:true,
+        steps:0
       }
     case "GAME_RESTARTED":
       return {
@@ -28,18 +29,20 @@ const reducer = (state = initialState, action) => {
     case "STEP_TAKEN":
       return {
         ...state,
+        lastStep:action.letter,
         array: [
-          ...state.array.slice(0,action.payload.id),
-          action.payload.letter,
-          ...state.array.slice(action.payload.id + 1)
-        ],
-        lastStep:action.payload.letter
+          ...state.array.slice(0,action.id),
+          action.letter,
+          ...state.array.slice(action.id+1)
+        ]
       }
     case "TWO_PLAYERS_SELECTED":
       return {
         ...state,
         player_default_value: true,
-        two_players:true
+        two_players:true,
+        player_value:"X",
+        computer_value:"O",
       }
     case "ONE_PLAYER_SELECTED":
       return {
@@ -52,7 +55,6 @@ const reducer = (state = initialState, action) => {
         player_default_value:true,
         player_value:"X",
         computer_value: "O",
-
       }
     case "CHANGE_VALUE_O":
       return{
@@ -70,8 +72,8 @@ const reducer = (state = initialState, action) => {
       return {
         ...state,
         scores:{...state.scores,tie: state.scores.tie + 1},
-        steps: 0,
-        lastStep:null,
+        steps: initialState.steps,
+        lastStep: initialState.lastStep,
         array: initialState.array
       }
     case "GAME_IS_END":
@@ -79,22 +81,19 @@ const reducer = (state = initialState, action) => {
         return {
           ...state,
           scores:{...state.scores,player1: state.scores.player1 + 1},
-          steps: 0,
-          lastStep:null,
+          steps: initialState.steps,
+          lastStep: initialState.lastStep,
           array: initialState.array
         }
       }else{
-
         return {
           ...state,
           scores:{...state.scores,player2: state.scores.player2 + 1},
-          steps: 0,
-          lastStep:null,
-          array: initialState.array,
+          steps: initialState.steps,
+          lastStep: initialState.lastStep,
+          array: initialState.array
         }
       }
-
-
     default:
       return state;
   }

@@ -2,6 +2,7 @@ import React, {useEffect} from 'react';
 import styles from './board.module.scss';
 import Square from "./square";
 import {connect} from "react-redux";
+import {nextLogicTurn,gameWinner,finalLogic} from "../../functions";
 import * as actions from '../../redux/actionCreators';
 
 
@@ -19,199 +20,110 @@ const {
   const {
     start,
     array,
-    two_players,
     steps,
+    scores,
     player_value,
+    player_default_value,
     computer_value,
-    lastStep
+    lastStep,
+    two_players,
   } = props.state;
 
   useEffect(() => {
-
-        if(gameWinner(lastStep)){
-          setTimeout(() => {
-            gameIsEnd(lastStep);
-          },1000)
-        }else if(steps === 9){
-          setTimeout(() => {
-            gameIsTie();
-          },1000)
-        }else if(steps %2 === 1){
-          if(!two_players){
-            computerTurn();
-          }
-        }
-
+    if (two_players) {
+      if (gameWinner(lastStep, array)) {
+        setTimeout(() => {
+          gameIsEnd(lastStep);
+        }, 1000)
+      } else if (steps === 9) {
+        setTimeout(() => {
+          gameIsTie();
+        }, 1000)
+      }
+    } else if (!player_default_value) {
+      if(gameWinner(lastStep,array)){
+        setTimeout(() => {
+          gameIsEnd(lastStep);
+        },1000)
+      }else if(steps === 9){
+        setTimeout(() => {
+          gameIsTie();
+        },1000)
+      }else if(steps %2 === 0 && steps > 0){
+        computerTurn();
+      }
+    } else if (gameWinner(lastStep, array)) {
+      setTimeout(() => {
+        gameIsEnd(lastStep);
+      }, 1000)
+    } else if (steps === 9) {
+      setTimeout(() => {
+        gameIsTie();
+      }, 1000)
+    } else if (steps % 2 === 1) {
+      computerTurn();
+    }
   });
 
+  useEffect(() => {
+  if(!player_default_value){
+    setTimeout(() => {
+      computerTurn();
+    },500)
+    }
+  },[start])
+
+  useEffect(() => {
+    if(!player_default_value){
+      setTimeout(() => {
+        computerTurn();
+      },500)
+    }
+  },[scores])
+
+
   const playerTurn = (id) => {
-    if(array[id] === '') {
-      stepTaken(id, player_value);
-      nextTurn();
-    }
-  };
-
-  const computerTurn = () => {
-
-/*    let idx = '';
-
-    if ((array[1] === array[2] && array[1] !== '')
-      ||(array[3] === array[6] && array[3] !== '')
-    ||(array[4] === array[8] && array[4] !== '')
-    ){
-      idx = 0;
-    }
-    if ((array[0] === array[2] && array[0] !== '')
-      ||(array[4] === array[7] && array[4] !== '')
-    ){
-      idx = 1;
-    }
-    if ((array[0] === array[1] && array[1] !== '')
-      ||(array[4] === array[6] && array[4] !== '')
-      ||(array[5] === array[8] && array[5] !== '')
-    ){
-      idx = 2;
-    }
-    if ((array[0] === array[6] && array[0] !== '')
-      ||(array[4] === array[5] && array[4] !== '')
-    ){
-      idx = 3;
-    }
-    if ((array[0] === array[8] && array[0] !== '')
-      ||(array[1] === array[7] && array[1] !== '')
-      ||(array[3] === array[5] && array[3] !== '')
-      ||(array[2] === array[6] && array[2] !== '')
-    ){
-      idx = 4;
-    }
-    if ((array[3] === array[4] && array[3] !== '')
-      ||(array[2] === array[8] && array[2] !== '')
-    ){
-      idx = 5;
-    }
-    if ((array[0] === array[3] && array[3] !== '')
-      ||(array[2] === array[4] && array[2] !== '')
-      ||(array[7] === array[8] && array[7] !== '')
-    ){
-      idx = 6;
-    }
-    if ((array[1] === array[4] && array[1] !== '')
-      ||(array[6] === array[8] && array[6] !== '')
-    ){
-      idx = 7;
-    }
-    if ((array[0] === array[4] && array[0] !== '')
-      ||(array[6] === array[7] && array[6] !== '')
-      ||(array[2] === array[5] && array[2] !== '')
-    ){
-      idx = 8;
-    }*/
-
-    let id = nextLogicTurn(array);
-    if(id === -1){
-      id = Math.floor(Math.random() * 8);
-      while(array[id] === 'X' || array[id] === 'O'){
-        id = Math.floor(Math.random() * 8);
-      }
-    }
-      stepTaken(id,computer_value);
-      nextTurn();
-
-
-  };
-
-
-  const nextLogicTurn =  (array) => {
-
-
-    if ((array[1] === array[2] && array[1] !== '' && array[0] === '')
-      ||(array[3] === array[6] && array[3] !== '' && array[0] === '')
-      ||(array[4] === array[8] && array[4] !== '' && array[0] === '')
-    ){
-      return 0;
-    }
-    if ((array[0] === array[2] && array[0] !== '' && array[1] === '')
-      ||(array[4] === array[7] && array[4] !== '' && array[1] === '')
-    ){
-      return 1;
-    }
-    if ((array[0] === array[1] && array[1] !== '' && array[2] === '')
-      ||(array[4] === array[6] && array[4] !== '' && array[2] === '')
-      ||(array[5] === array[8] && array[5] !== '' && array[2] === '')
-    ){
-      return 2;
-    }
-    if ((array[0] === array[6] && array[0] !== '' && array[3] === '')
-      ||(array[4] === array[5] && array[4] !== '' && array[3] === '')
-    ){
-      return 3;
-    }
-    if ((array[1] === array[7] && array[1] !== '' && array[4] === '')
-      ||(array[3] === array[5] && array[3] !== '' && array[4] === '')
-      ||(array[2] === array[6] && array[2] !== '' && array[4] === '')
-      ||(array[0] === array[8] && array[0] !== '' && array[4] === '')
-    ){
-      return 4;
-    }
-    if ((array[3] === array[4] && array[3] !== '' && array[5] === '')
-      ||(array[2] === array[8] && array[2] !== '' && array[5] === '')
-    ){
-      return 5;
-    }
-    if ((array[0] === array[3] && array[3] !== '' && array[6] === '')
-      ||(array[2] === array[4] && array[2] !== '' && array[6] === '')
-      ||(array[7] === array[8] && array[7] !== '' && array[6] === '')
-    ){
-      return 6;
-    }
-    if ((array[1] === array[4] && array[1] !== '' && array[7] === '')
-      ||(array[6] === array[8] && array[6] !== '' && array[7] === '')
-    ){
-      return 7;
-    }
-    if ((array[0] === array[4] && array[0] !== '' && array[8] === '' )
-      ||(array[6] === array[7] && array[6] !== '' && array[8] === '')
-      ||(array[2] === array[5] && array[2] !== '' && array[8] === '')
-    ){
-      return 8;
-    }
-
-
-    return -1;
-  };
-
-  const gameWinner =  (lastStepValue) => {
-      for( let i = 0; i <= 6; i+=3){
-         if(array[i] === lastStepValue
-           && array[i+1] === lastStepValue
-           && array[i+2] === lastStepValue){
-           return true;
+    if(array[id] === '' ){
+      let pl_value = player_value;
+      if(two_players){
+         if(steps %2 === 1){
+           pl_value = computer_value;
+         }else{
+           pl_value = player_value;
          }
       }
-      for( let i = 0; i <= 2; i++){
-        if(array[i] === lastStepValue
-          && array[i+3] === lastStepValue
-          && array[i+6] === lastStepValue){
-          return true;
-        }
-      }
-      if(array[0] === lastStepValue
-        && array[4] === lastStepValue
-        && array[8] === lastStepValue){
-        return true;
-      }else  if(array[2] === lastStepValue
-        && array[4] === lastStepValue
-        && array[6] === lastStepValue){
-        return true;
-      }
-
-    return false;
-
+      stepTaken(id, pl_value);
+      nextTurn();
+    }
   };
 
 
-
-
+  const computerTurn = () => {
+    let idx = nextLogicTurn(array,computer_value);
+    if(idx === -1){
+      let index = nextLogicTurn(array,player_value);
+      if( index !== -1){
+        stepTaken(index,computer_value);
+        nextTurn();
+      }else {
+        let id = finalLogic(array);
+        if (id !== -1) {
+          stepTaken(id,computer_value);
+          nextTurn();
+        }else{
+          console.log('random')
+        }
+        /*let id = Math.floor(Math.random() * 9);
+        while (array[id] === 'X' || array[id] ==='O'){
+          id = Math.floor(Math.random() * 9);
+        stepTaken(id,computer_value);
+        nextTurn();*/
+      }
+    }else{
+      stepTaken(idx,computer_value);
+      nextTurn();
+    }
+  };
 
   const arr = [0,1,2,3,4,5,6,7,8].map((idx) =>{
     return(
